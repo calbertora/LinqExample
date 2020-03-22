@@ -10,17 +10,15 @@ namespace LinqExample
         static void Main(string[] args)
         {
             var times = 0;
-            var startingDeck =  from s in Suits()
+            var startingDeck =  (from s in Suits()
                                 from r in Ranks()
-                                select new { Suit = s, Rank = r };
+                                select new { Suit = s, Rank = r }).ToArray();
 
-            var (top,bottom) = (startingDeck.Take(26),startingDeck.Skip(26));
-
-            var shuffle = top.InterleaveSequenceWith(bottom);
+            var shuffle = startingDeck;
             
             do
             {
-                shuffle = shuffle.Take(26).InterleaveSequenceWith(shuffle.Skip(26));
+                shuffle = shuffle.Skip(26).InterleaveSequenceWith(shuffle.Take(26)).ToArray();
 
                 foreach (var card in shuffle)
                 {
