@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinqFaroShuffle;
 
 namespace LinqExample
 {
@@ -13,7 +14,16 @@ namespace LinqExample
                                 select new { Suit = s, Rank = r };
 
             // Display each card that we've generated and placed in startingDeck in the console
-            foreach (var card in startingDeck)
+            /*foreach (var card in startingDeck)
+            {
+                Console.WriteLine(card);
+            }*/
+
+            var (top,bottom) = (startingDeck.Take(26),startingDeck.Skip(26));
+
+            var shuffle = top.InterleaveSequenceWith(bottom);
+            
+            foreach (var card in shuffle)
             {
                 Console.WriteLine(card);
             }
@@ -43,6 +53,5 @@ namespace LinqExample
             yield return "king";
             yield return "ace";
         }
-
     }
 }
