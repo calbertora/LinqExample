@@ -9,24 +9,29 @@ namespace LinqExample
     {
         static void Main(string[] args)
         {
+            var times = 0;
             var startingDeck =  from s in Suits()
                                 from r in Ranks()
                                 select new { Suit = s, Rank = r };
-
-            // Display each card that we've generated and placed in startingDeck in the console
-            /*foreach (var card in startingDeck)
-            {
-                Console.WriteLine(card);
-            }*/
 
             var (top,bottom) = (startingDeck.Take(26),startingDeck.Skip(26));
 
             var shuffle = top.InterleaveSequenceWith(bottom);
             
-            foreach (var card in shuffle)
+            do
             {
-                Console.WriteLine(card);
-            }
+                shuffle = shuffle.Take(26).InterleaveSequenceWith(shuffle.Skip(26));
+
+                foreach (var card in shuffle)
+                {
+                    Console.WriteLine(card);
+                }
+                Console.WriteLine();
+                times++;
+
+            } while (!startingDeck.SequenceEquals(shuffle));
+
+            Console.WriteLine(times);
         }
 
         static IEnumerable<string> Suits()
